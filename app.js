@@ -9,8 +9,33 @@
  */
 
 // ==========================================================================
-// 1. Default Configuration & Storage Initialization
+// 1. Safe LocalStorage Wrapper (Prevents iOS WebView SecurityError crashes)
 // ==========================================================================
+const safeStorage = {
+  getItem(key) {
+    try {
+      return localStorage.getItem(key);
+    } catch (e) {
+      console.warn("Storage read blocked: ", e.message);
+      return null;
+    }
+  },
+  setItem(key, value) {
+    try {
+      localStorage.setItem(key, value);
+    } catch (e) {
+      console.warn("Storage write blocked: ", e.message);
+    }
+  },
+  removeItem(key) {
+    try {
+      localStorage.removeItem(key);
+    } catch (e) {
+      console.warn("Storage remove blocked: ", e.message);
+    }
+  }
+};
+
 const DEFAULT_TARIFF_SCHEDULE = {
   "notes": [
     "Summer season is 06-01 to 09-30.",
@@ -596,12 +621,12 @@ function updateCSSVariables() {
 function handleColorPickerChange(e, period) {
   customColors[period] = e.target.value;
   updateCSSVariables();
-  localStorage.setItem('tariff_custom_colors', JSON.stringify(customColors));
+  safeStorage.setItem('tariff_custom_colors', JSON.stringify(customColors));
   updateUI();
 }
 
 function initCustomColors() {
-  const stored = localStorage.getItem('tariff_custom_colors');
+  const stored = safeStorage.getItem('tariff_custom_colors');
   if (stored) {
     try {
       customColors = JSON.parse(stored);
@@ -662,7 +687,7 @@ function exitSimulationMode() {
 // ==========================================================================
 
 function initJSONEditor() {
-  const stored = localStorage.getItem('tariff_schedule_config');
+  const stored = safeStorage.getItem('tariff_schedule_config');
   if (stored) {
     try {
       activeConfig = JSON.parse(stored);
@@ -705,7 +730,7 @@ function saveJSONConfig() {
     }
 
     activeConfig = parsed;
-    localStorage.setItem('tariff_schedule_config', JSON.stringify(activeConfig));
+    safeStorage.setItem('tariff_schedule_config', JSON.stringify(activeConfig));
     jsonErrorMsg.classList.add("hidden");
     
     // Animate save feedback
@@ -726,7 +751,7 @@ function saveJSONConfig() {
 function resetJSONConfig() {
   if (confirm("確定要將電價設定還原成預設值嗎？")) {
     activeConfig = JSON.parse(JSON.stringify(DEFAULT_TARIFF_SCHEDULE));
-    localStorage.removeItem('tariff_schedule_config');
+    safeStorage.removeItem('tariff_schedule_config');
     jsonEditor.value = JSON.stringify(activeConfig, null, 2);
     jsonErrorMsg.classList.add("hidden");
     updateUI();
