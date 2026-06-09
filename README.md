@@ -7,6 +7,8 @@
 <p align="center">
   <img src="assets/home-screen-preview.jpg" width="320" alt="iPhone 桌面效果預覽">
   <img src="assets/dashboard-preview.jpg" width="320" alt="網頁控制面板預覽">
+  <img src="assets/fullscreen-preview-24h.jpg" width="280" alt="24小時制全螢幕預覽">
+  <img src="assets/fullscreen-preview-12h.jpg" width="280" alt="12小時制全螢幕預覽">  
 </p>
 
 ---
@@ -27,18 +29,13 @@
 本專案支援三種不同的運作與顯示模式，您可以透過不同的 URL 錨點（Hash）來載入：
 
 1. **完整控制面板模式 (Dashboard)**：
-   * **網址**：`https://lazilywalk.github.io/taiwan-tariff-clock/index.html`
+   * **網址**：[https://lazilywalk.github.io/taiwan-tariff-clock/index.html](https://lazilywalk.github.io/taiwan-tariff-clock/index.html)
    * **特點**：預設模式。顯示完整的電價時鐘、快捷模擬測試拉桿、自訂色彩選取器及 JSON 編輯器。適合在電腦或手機瀏覽器上進行排程設定與邏輯測試。
 2. **全螢幕小工具預覽模式 (Widget Preview - 顯示指針)**：
-   * **網址**：`https://lazilywalk.github.io/taiwan-tariff-clock/index.html#preview`
+   * **網址**：[https://lazilywalk.github.io/taiwan-tariff-clock/index.html#preview](https://lazilywalk.github.io/taiwan-tariff-clock/index.html#preview)
    * **特點**：點擊網頁上方的「**小工具模式**」或在網址後方加上 `#preview` 載入。此模式會隱藏所有控制面板，使時鐘填滿畫面，且**時針、分針、秒針依然會動態旋轉走時**。適合拿來當作全螢幕的翻頁/類比時鐘看板（如 iPad 站立支架模式），或加入手機主畫面作為 Web App。
-   * **預覽**：
-     <p align="center">
-       <img src="assets/fullscreen-preview-24h.jpg" width="280" alt="24小時制全螢幕預覽">
-       <img src="assets/fullscreen-preview-12h.jpg" width="280" alt="12小時制全螢幕預覽">
-     </p>
 3. **Widgy 專用小工具模式 (Widgy Mode - 無指針)**：
-   * **網址**：`https://lazilywalk.github.io/taiwan-tariff-clock/index.html#widget`
+   * **網址**：[https://lazilywalk.github.io/taiwan-tariff-clock/index.html#widget](https://lazilywalk.github.io/taiwan-tariff-clock/index.html#widget)
    * **特點**：點擊網頁上方的「**Widgy 模式**」按鈕或在網址後方加上 `#widget` 載入。此模式會隱藏所有控制面板，**強制切換為 12 小時制同心圓環，並且不顯示任何指針**（僅保留錶盤、彩色電價環與數字刻度）。這專為 Widgy 小工具設計，以便疊加 iOS 原生即時走時指針。
    * **💡 提示**：在此模式下，底部的懸浮控制列將自動隱藏以確保截圖純淨。如果您是在電腦或手機瀏覽器上預覽此模式，**只需在螢幕任意空白處「快速雙擊 (Double-click)」或手機螢幕「快速雙擊 (Double-tap)」，即可立刻退出並返回完整控制面板模式**。
 
