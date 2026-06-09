@@ -158,7 +158,9 @@ const timeFormatSwitch = document.getElementById("time-format-switch");
 const themeSwitch = document.getElementById("theme-switch");
 const secondHandSwitch = document.getElementById("second-hand-switch");
 const widgetModeBtn = document.getElementById("widget-mode-btn");
+const widgyModeBtn = document.getElementById("widgy-mode-btn");
 const exitWidgetModeBtn = document.getElementById("exit-widget-mode-btn");
+const widgetFormatToggleBtn = document.getElementById("widget-format-toggle-btn");
 
 // Color Pickers
 const colorPeak = document.getElementById("color-peak");
@@ -803,13 +805,51 @@ function setupEventListeners() {
     state.secondHandMode = btn.dataset.value;
   });
 
-  // Widget Mode Toggles
-  const toggleWidgetMode = () => {
+  // Widget Mode Toggles (With Hands)
+  widgetModeBtn.addEventListener("click", () => {
+    document.body.classList.remove("widgy-mode");
     document.body.classList.toggle("widget-mode");
     updateUI();
-  };
-  widgetModeBtn.addEventListener("click", toggleWidgetMode);
-  exitWidgetModeBtn.addEventListener("click", toggleWidgetMode);
+  });
+
+  // Widgy Widget Mode Toggle (No Hands, 12h)
+  widgyModeBtn.addEventListener("click", () => {
+    const isWidgy = document.body.classList.toggle("widgy-mode");
+    if (isWidgy) {
+      document.body.classList.add("widget-mode");
+      state.timeFormat = "12h";
+      // Sync dashboard buttons
+      timeFormatSwitch.querySelectorAll("button").forEach(b => {
+        if (b.dataset.value === "12h") b.classList.add("active");
+        else b.classList.remove("active");
+      });
+      generateClockDial();
+    } else {
+      document.body.classList.remove("widget-mode");
+    }
+    updateUI();
+  });
+
+  exitWidgetModeBtn.addEventListener("click", () => {
+    document.body.classList.remove("widget-mode");
+    document.body.classList.remove("widgy-mode");
+    updateUI();
+  });
+
+  // Format Toggle inside full-screen Widget Mode
+  widgetFormatToggleBtn.addEventListener("click", () => {
+    state.timeFormat = state.timeFormat === "12h" ? "24h" : "12h";
+    
+    // Synchronize the segmented switcher in the dashboard
+    const segments = timeFormatSwitch.querySelectorAll("button");
+    segments.forEach(b => {
+      if (b.dataset.value === state.timeFormat) b.classList.add("active");
+      else b.classList.remove("active");
+    });
+    
+    generateClockDial();
+    updateUI();
+  });
 
   // Simulation controls
   simDateInput.addEventListener("input", (e) => {
@@ -850,6 +890,31 @@ function setupEventListeners() {
   jsonEditor.addEventListener("input", () => {
     jsonErrorMsg.classList.add("hidden");
   });
+
+  // Double-click (PC) or Double-tap (Mobile) anywhere to exit widget/widgy mode
+  const exitWidgetAndWidgyMode = () => {
+    if (document.body.classList.contains("widget-mode")) {
+      document.body.classList.remove("widget-mode");
+      document.body.classList.remove("widgy-mode");
+      // Clear URL hash without page reload
+      history.replaceState(null, null, ' ');
+      updateUI();
+    }
+  };
+
+  document.body.addEventListener("dblclick", exitWidgetAndWidgyMode);
+
+  let lastTapTime = 0;
+  document.body.addEventListener("touchend", (e) => {
+    const currentTime = new Date().getTime();
+    const tapLength = currentTime - lastTapTime;
+    if (tapLength < 400 && tapLength > 0) {
+      // Double tap detected
+      exitWidgetAndWidgyMode();
+      e.preventDefault();
+    }
+    lastTapTime = currentTime;
+  });
 }
 
 /**
@@ -862,14 +927,18 @@ function tick() {
 
 // Initialize Application
 function init() {
-  // Check if URL hash or query param specifies widget mode
-  if (window.location.hash.includes("widget") || window.location.search.includes("mode=widget")) {
-    document.body.classList.add("widget-mode");
-  }
+  const hash = window.location.hash;
+  const search = window.location.search;
 
-  // Check if URL hash specifies hiding hands for native widget hands overlay
-  if (window.location.hash.includes("nohands")) {
-    document.body.classList.add("nohands-mode");
+  // Check if URL specifies Widgy Mode (no hands, 12h)
+  if (hash === "#widget" || hash.includes("widgy") || search.includes("mode=widgy")) {
+    document.body.classList.add("widget-mode");
+    document.body.classList.add("widgy-mode");
+    state.timeFormat = "12h";
+  } 
+  // Check if URL specifies Widget Preview Mode (with hands)
+  else if (hash === "#preview" || hash.includes("preview") || search.includes("mode=widget")) {
+    document.body.classList.add("widget-mode");
   }
 
   initCustomColors();
@@ -877,6 +946,15 @@ function init() {
   generateClockDial();
   setupEventListeners();
   syncSimulationUI();
+  
+  // Sync the format switch UI active segment button
+  if (document.body.classList.contains("widgy-mode")) {
+    const segments = timeFormatSwitch.querySelectorAll("button");
+    segments.forEach(b => {
+      if (b.dataset.value === "12h") b.classList.add("active");
+      else b.classList.remove("active");
+    });
+  }
   
   // Synchronously render the UI immediately so background screenshotting captures it
   updateUI();
@@ -886,4 +964,4 @@ function init() {
 }
 
 // Boot
-document.addEventListener("DOMContentLoaded", init);
+init();
