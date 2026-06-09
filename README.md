@@ -1,8 +1,9 @@
-# 台灣時間電價時鐘 (Taiwan TOU Electricity Tariff Clock)
+# 台灣時間電價時鐘 for iPhone Widgy
 
-一個專為 iPhone 桌面小工具（Widget）設計的 **時間電價類比時鐘網頁**。
+一個專為 iPhone 設計的 **時間電價類比時鐘網頁**。
 本專案將複雜的時間電價排程（尖峰、半尖峰、離峰）以彩色環形段呈現在類比時鐘的刻度盤上，
 並支援 24 小時與 12 小時顯示，讓您一眼掌握目前的電價時段。
+亦提供不顯示指針的模式供 Widgy 疊加 iOS 原生指針。
 
 <p align="center">
   <img src="assets/home-screen-preview.jpg" width="320" alt="iPhone 桌面效果預覽">
