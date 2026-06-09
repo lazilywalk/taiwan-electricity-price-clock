@@ -838,8 +838,13 @@ function tick() {
 // Initialize Application
 function init() {
   // Check if URL hash or query param specifies widget mode
-  if (window.location.hash === "#widget" || window.location.search.includes("mode=widget")) {
+  if (window.location.hash.includes("widget") || window.location.search.includes("mode=widget")) {
     document.body.classList.add("widget-mode");
+  }
+
+  // Check if URL hash specifies hiding hands for native widget hands overlay
+  if (window.location.hash.includes("nohands")) {
+    document.body.classList.add("nohands-mode");
   }
 
   initCustomColors();
