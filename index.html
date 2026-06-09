@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>時間電價類比時鐘小工具</title>
+  
+  <!-- iOS Home Screen Widget Optimization -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="時間電價">
+  
+  <!-- Modern Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="dark-theme">
+  <div class="app-container">
+    
+    <!-- Top Header -->
+    <header class="app-header">
+      <div class="logo-area">
+        <h1>時間電價時鐘</h1>
+        <p class="subtitle">24H / 12H 智慧電價指示盤</p>
+      </div>
+      <div class="header-controls">
+        <button id="widget-mode-btn" class="icon-btn" title="切換小工具專用模式">
+          <span class="btn-text">小工具模式</span>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line></svg>
+        </button>
+      </div>
+    </header>
+
+    <main class="app-main">
+      
+      <!-- Left Column: Clock Widget -->
+      <section class="widget-column">
+        <div class="widget-card-wrapper">
+          <div id="tariff-widget" class="widget-card active-off-peak">
+            <!-- Glassmorphism overlay glow -->
+            <div class="card-glow"></div>
+            
+            <div class="widget-header">
+              <span class="widget-title" id="widget-season-label">夏月 - 工作日</span>
+              <span class="widget-mode-badge" id="widget-time-format-badge">24H</span>
+            </div>
+
+            <!-- SVG Analog Clock Face -->
+            <div class="clock-container">
+              <svg id="analog-clock" viewBox="0 0 200 200" width="100%" height="100%">
+                <!-- Shadow definitions -->
+                <defs>
+                  <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+                    <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.3"/>
+                  </filter>
+                  <filter id="glow-red" filterUnits="userSpaceOnUse" x="0" y="0" width="200" height="200">
+                    <feGaussianBlur stdDeviation="1.5" result="blur" />
+                    <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                  </filter>
+                  <filter id="glow-yellow" filterUnits="userSpaceOnUse" x="0" y="0" width="200" height="200">
+                    <feGaussianBlur stdDeviation="1.5" result="blur" />
+                    <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                  </filter>
+                  <filter id="glow-green" filterUnits="userSpaceOnUse" x="0" y="0" width="200" height="200">
+                    <feGaussianBlur stdDeviation="1.5" result="blur" />
+                    <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                  </filter>
+                </defs>
+                
+                <!-- Outer clock rim background -->
+                <circle cx="100" cy="100" r="95" class="clock-rim" />
+                <circle cx="100" cy="100" r="94" class="clock-face" />
+
+                <!-- Color sectors (Dynamic SVG arcs loaded here) -->
+                <g id="tariff-sectors"></g>
+
+                <!-- Clock markings (hour ticks) -->
+                <g id="clock-ticks"></g>
+
+                <!-- Clock numbers -->
+                <g id="clock-labels" class="clock-numbers"></g>
+
+                <!-- AM/PM indicator for 12h mode -->
+                <text id="clock-am-pm" x="100" y="132" dominant-baseline="middle" text-anchor="middle" class="clock-am-pm-label"></text>
+
+                <!-- Hands -->
+                <g id="clock-hands">
+                  <!-- Hour Hand -->
+                  <line id="hour-hand" x1="100" y1="100" x2="100" y2="52" class="hand hour" stroke-linecap="round" />
+                  <!-- Minute Hand -->
+                  <line id="minute-hand" x1="100" y1="100" x2="100" y2="30" class="hand minute" stroke-linecap="round" />
+                  <!-- Second Hand -->
+                  <g id="second-hand-group">
+                    <line id="second-hand" x1="100" y1="115" x2="100" y2="20" class="hand second" />
+                    <circle cx="100" cy="100" r="2.5" class="second-hub" />
+                  </g>
+                  <!-- Center hub cap -->
+                  <circle cx="100" cy="100" r="4.5" class="center-cap" />
+                </g>
+              </svg>
+            </div>
+
+            <!-- Widget Info Overlay -->
+            <div class="widget-info">
+              <div class="time-row">
+                <span id="widget-digital-time" class="digital-time">09:00:00</span>
+                <span id="widget-date" class="widget-date">6月9日 週二</span>
+              </div>
+              <div class="tariff-status-row">
+                <div id="tariff-badge" class="status-badge off-peak">
+                  <span class="status-dot"></span>
+                  <span id="tariff-label" class="status-text">離峰時間</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Quick exit widget mode button (only visible when in widget mode) -->
+        <button id="exit-widget-mode-btn" class="exit-widget-btn">
+          退出小工具模式
+        </button>
+      </section>
+
+      <!-- Right Column: Settings and Simulations -->
+      <section class="controls-column">
+        
+        <!-- Display Customization -->
+        <div class="control-card">
+          <h2 class="card-title">顯示設定</h2>
+          <div class="control-row">
+            <span class="control-label">時鐘格式</span>
+            <div class="segmented-control" id="time-format-switch">
+              <button class="segment active" data-value="24h">24 小時制</button>
+              <button class="segment" data-value="12h">12 小時制</button>
+            </div>
+          </div>
+          <div class="control-row">
+            <span class="control-label">主題模式</span>
+            <div class="segmented-control" id="theme-switch">
+              <button class="segment active" data-value="dark">暗黑</button>
+              <button class="segment" data-value="light">明亮</button>
+            </div>
+          </div>
+          <div class="control-row">
+            <span class="control-label">秒針運動</span>
+            <div class="segmented-control" id="second-hand-switch">
+              <button class="segment active" data-value="smooth">流暢掃秒</button>
+              <button class="segment" data-value="step">每秒跳動</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Simulation Control -->
+        <div class="control-card">
+          <div class="card-header-with-actions">
+            <h2 class="card-title">時間模擬與測試</h2>
+            <button id="reset-time-btn" class="text-btn">恢復系統時間</button>
+          </div>
+          
+          <div class="simulation-dashboard">
+            <div class="control-row-stack">
+              <label for="sim-date" class="control-label">日期選擇</label>
+              <input type="date" id="sim-date" class="form-input">
+            </div>
+            
+            <div class="control-row-stack">
+              <div class="slider-header">
+                <span class="control-label">時間調整 (時:分)</span>
+                <span id="sim-time-display" class="slider-val">12:00</span>
+              </div>
+              <input type="range" id="sim-time-slider" min="0" max="1439" value="720" class="form-range">
+            </div>
+          </div>
+
+          <!-- Simulation Presets -->
+          <div class="presets-section">
+            <span class="presets-title">一鍵情境測試：</span>
+            <div class="preset-grid">
+              <button class="preset-btn" data-date="2026-06-09" data-time="540">
+                <span class="preset-badge summer">夏月</span>
+                <span class="preset-name">平日 09:00 (半尖峰)</span>
+              </button>
+              <button class="preset-btn" data-date="2026-06-09" data-time="1080">
+                <span class="preset-badge summer">夏月</span>
+                <span class="preset-name">平日 18:00 (尖峰)</span>
+              </button>
+              <button class="preset-btn" data-date="2026-06-07" data-time="720">
+                <span class="preset-badge summer">夏月</span>
+                <span class="preset-name">週末 12:00 (離峰)</span>
+              </button>
+              <button class="preset-btn" data-date="2026-11-10" data-time="480">
+                <span class="preset-badge nonsummer">非夏</span>
+                <span class="preset-name">平日 08:00 (半尖峰)</span>
+              </button>
+              <button class="preset-btn" data-date="2026-11-10" data-time="720">
+                <span class="preset-badge nonsummer">非夏</span>
+                <span class="preset-name">平日 12:00 (離峰)</span>
+              </button>
+              <button class="preset-btn" data-date="2026-06-19" data-time="720">
+                <span class="preset-badge holiday">離峰日</span>
+                <span class="preset-name">端午 12:00 (離峰)</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tariff Custom Colors -->
+        <div class="control-card">
+          <h2 class="card-title">自訂時區顏色</h2>
+          <div class="color-picker-grid">
+            <div class="color-picker-item">
+              <span class="color-picker-dot peak"></span>
+              <span class="color-label">尖峰時間</span>
+              <input type="color" id="color-peak" value="#ef4444" class="color-input">
+            </div>
+            <div class="color-picker-item">
+              <span class="color-picker-dot semi-peak"></span>
+              <span class="color-label">半尖峰時間</span>
+              <input type="color" id="color-semi-peak" value="#f59e0b" class="color-input">
+            </div>
+            <div class="color-picker-item">
+              <span class="color-picker-dot off-peak"></span>
+              <span class="color-label">離峰時間</span>
+              <input type="color" id="color-off-peak" value="#10b981" class="color-input">
+            </div>
+          </div>
+        </div>
+
+        <!-- JSON Editor -->
+        <div class="control-card">
+          <div class="card-header-with-actions">
+            <h2 class="card-title">時間電價規則 JSON 編輯</h2>
+            <div class="action-row">
+              <button id="reset-json-btn" class="text-btn danger">還原預設</button>
+              <button id="save-json-btn" class="accent-btn">儲存設定</button>
+            </div>
+          </div>
+          
+          <div class="json-editor-container">
+            <textarea id="json-editor" spellcheck="false"></textarea>
+            <div id="json-error-msg" class="json-error-msg hidden">JSON 語法錯誤</div>
+          </div>
+          <p class="json-tips">提示：更新設定後時鐘會即時重繪。若離峰日日期需要修改，可在 "offDays" 的對應年份中調整。</p>
+        </div>
+
+      </section>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="app-footer">
+      <p>採用 HSL 動態主題與 SVG 矢量渲染 • 專為 iOS Desktop Widget 設計</p>
+    </footer>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

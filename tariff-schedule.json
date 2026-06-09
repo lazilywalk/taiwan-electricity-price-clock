@@ -1,0 +1,67 @@
+{
+  "notes": [
+    "Summer season is 06-01 to 09-30.",
+    "Non-summer season is 01-01 to 05-31 and 10-01 to 12-31.",
+    "offDays have priority and are off-peak all day.",
+    "days supports weekday, saturday, sunday, and offDay."
+  ],
+  "defaultPeriod": "off-peak",
+  "periods": {
+    "peak": {
+      "label": "Peak",
+      "bodyClass": "peak"
+    },
+    "semi-peak": {
+      "label": "Semi-peak",
+      "bodyClass": "semi-peak"
+    },
+    "off-peak": {
+      "label": "Off-peak",
+      "bodyClass": "off-peak"
+    }
+  },
+  "offDays": {
+    "2026": ["05-01", "06-19", "09-25", "09-28", "10-10", "12-25"]
+  },
+  "seasons": [
+    {
+      "id": "summer",
+      "label": "Summer",
+      "start": "06-01",
+      "end": "09-30",
+      "rules": [
+        { "days": ["weekday"], "from": "00:00", "to": "09:00", "period": "off-peak" },
+        { "days": ["weekday"], "from": "09:00", "to": "16:00", "period": "semi-peak" },
+        { "days": ["weekday"], "from": "16:00", "to": "22:00", "period": "peak" },
+        { "days": ["weekday"], "from": "22:00", "to": "24:00", "period": "semi-peak" },
+        { "days": ["saturday", "sunday", "offDay"], "from": "00:00", "to": "24:00", "period": "off-peak" }
+      ]
+    },
+    {
+      "id": "nonSummerEarly",
+      "label": "Non-summer",
+      "start": "01-01",
+      "end": "05-31",
+      "rules": [
+        { "days": ["weekday"], "from": "00:00", "to": "06:00", "period": "off-peak" },
+        { "days": ["weekday"], "from": "06:00", "to": "11:00", "period": "semi-peak" },
+        { "days": ["weekday"], "from": "11:00", "to": "14:00", "period": "off-peak" },
+        { "days": ["weekday"], "from": "14:00", "to": "24:00", "period": "semi-peak" },
+        { "days": ["saturday", "sunday", "offDay"], "from": "00:00", "to": "24:00", "period": "off-peak" }
+      ]
+    },
+    {
+      "id": "nonSummerLate",
+      "label": "Non-summer",
+      "start": "10-01",
+      "end": "12-31",
+      "rules": [
+        { "days": ["weekday"], "from": "00:00", "to": "06:00", "period": "off-peak" },
+        { "days": ["weekday"], "from": "06:00", "to": "11:00", "period": "semi-peak" },
+        { "days": ["weekday"], "from": "11:00", "to": "14:00", "period": "off-peak" },
+        { "days": ["weekday"], "from": "14:00", "to": "24:00", "period": "semi-peak" },
+        { "days": ["saturday", "sunday", "offDay"], "from": "00:00", "to": "24:00", "period": "off-peak" }
+      ]
+    }
+  ]
+}
