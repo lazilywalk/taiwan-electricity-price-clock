@@ -837,6 +837,11 @@ function tick() {
 
 // Initialize Application
 function init() {
+  // Check if URL hash or query param specifies widget mode
+  if (window.location.hash === "#widget" || window.location.search.includes("mode=widget")) {
+    document.body.classList.add("widget-mode");
+  }
+
   initCustomColors();
   initJSONEditor();
   generateClockDial();
