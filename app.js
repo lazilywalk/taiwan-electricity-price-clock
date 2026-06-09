@@ -878,7 +878,10 @@ function init() {
   setupEventListeners();
   syncSimulationUI();
   
-  // Start the render loop
+  // Synchronously render the UI immediately so background screenshotting captures it
+  updateUI();
+  
+  // Start the render loop for foreground interaction
   requestAnimationFrame(tick);
 }
 
