@@ -699,8 +699,8 @@ function initJSONEditor() {
     }
   }
   
-  // Try fetching local tariff-schedule.json asynchronously for matching workspace edits
-  fetch('tariff-schedule.json')
+  // Try fetching local tou-schedule.json asynchronously for matching workspace edits
+  fetch('tou-schedule.json')
     .then(response => {
       if (!response.ok) throw new Error("CORS or File not found");
       return response.json();
@@ -712,7 +712,7 @@ function initJSONEditor() {
         jsonEditor.value = JSON.stringify(activeConfig, null, 2);
         updateUI();
       }
-      console.log("Successfully fetched external tariff-schedule.json");
+      console.log("Successfully fetched external tou-schedule.json");
     })
     .catch(err => {
       console.warn("Using internal embedded schedule configuration: ", err.message);

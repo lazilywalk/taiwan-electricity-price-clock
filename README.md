@@ -20,8 +20,8 @@
 
 - **[index.html](index.html)**：網頁主結構。包含 SVG 向量時鐘結構、模擬測試面板、自訂顏色選取器與 JSON 排程編輯器。
 - **[style.css](style.css)**：視覺樣式表。包含高質感的暗黑模式、毛玻璃特效（Glassmorphism）、微光陰影，以及指針平滑動畫與「小工具滿版模式」響應式排版。
-- **[app.js](app.js)**：核心控制邏輯。包括讀取 `tariff-schedule.json`、日曆規則匹配演算法、SVG 角度計算（處理 24 小時單環與 12 小時 AM/PM 雙層環）與時鐘更新循環。
-- **[tariff-schedule.json](tariff-schedule.json)**：電價規則與離峰日定義設定檔（格式說明見下方自訂章節）。
+- **[app.js](app.js)**：核心控制邏輯。包括讀取 `tou-schedule.json`、日曆規則匹配演算法、SVG 角度計算（處理 24 小時單環與 12 小時 AM/PM 雙層環）與時鐘更新循環。
+- **[tou-schedule.json](tou-schedule.json)**：電價規則與離峰日定義設定檔（格式說明見下方自訂章節）。
 
 ---
 
@@ -30,13 +30,13 @@
 本專案支援三種不同的運作與顯示模式，您可以透過不同的 URL 錨點（Hash）來載入：
 
 1. **完整控制面板模式 (Dashboard)**：
-   * **網址**：[https://lazilywalk.github.io/taiwan-tariff-clock/index.html](https://lazilywalk.github.io/taiwan-tariff-clock/index.html)
+   * **網址**：[https://lazilywalk.github.io/taiwan-electricity-price-clock/index.html](https://lazilywalk.github.io/taiwan-electricity-price-clock/index.html)
    * **特點**：預設模式。顯示完整的電價時鐘、快捷模擬測試拉桿、自訂色彩選取器及 JSON 編輯器。適合在電腦或手機瀏覽器上進行排程設定與邏輯測試。
 2. **全螢幕小工具預覽模式 (Widget Preview - 顯示指針)**：
-   * **網址**：[https://lazilywalk.github.io/taiwan-tariff-clock/index.html#preview](https://lazilywalk.github.io/taiwan-tariff-clock/index.html#preview)
+   * **網址**：[https://lazilywalk.github.io/taiwan-electricity-price-clock/index.html#preview](https://lazilywalk.github.io/taiwan-electricity-price-clock/index.html#preview)
    * **特點**：點擊網頁上方的「**小工具模式**」或在網址後方加上 `#preview` 載入。此模式會隱藏所有控制面板，使時鐘填滿畫面，且**時針、分針、秒針依然會動態旋轉走時**。適合拿來當作全螢幕的翻頁/類比時鐘看板（如 iPad 站立支架模式），或加入手機主畫面作為 Web App。
 3. **Widgy 專用小工具模式 (Widgy Mode - 無指針)**：
-   * **網址**：[https://lazilywalk.github.io/taiwan-tariff-clock/index.html#widget](https://lazilywalk.github.io/taiwan-tariff-clock/index.html#widget)
+   * **網址**：[https://lazilywalk.github.io/taiwan-electricity-price-clock/index.html#widget](https://lazilywalk.github.io/taiwan-electricity-price-clock/index.html#widget)
    * **特點**：點擊網頁上方的「**Widgy 模式**」按鈕或在網址後方加上 `#widget` 載入。此模式會隱藏所有控制面板，**強制切換為 12 小時制同心圓環，並且不顯示任何指針**（僅保留錶盤、彩色電價環與數字刻度）。這專為 Widgy 小工具設計，以便疊加 iOS 原生即時走時指針。
    * **💡 提示**：在此模式下，底部的懸浮控制列將自動隱藏以確保截圖純淨。如果您是在電腦或手機瀏覽器上預覽此模式，**只需在螢幕任意空白處「快速雙擊 (Double-click)」或手機螢幕「快速雙擊 (Double-tap)」，即可立刻退出並返回完整控制面板模式**。
 
@@ -50,7 +50,7 @@
 此方案適合需要快速開啟全螢幕時鐘網頁（含動態旋轉指針）的使用場景。**請注意：此模式僅在點擊圖示開啟網頁後才走時，無法直接在 iOS 主畫面的圖示上即時刷新走時。**
 
 1. 用 iPhone 的 **Safari 瀏覽器** 開啟預覽網址：
-   `https://lazilywalk.github.io/taiwan-tariff-clock/index.html#preview`
+   [https://lazilywalk.github.io/taiwan-electricity-price-clock/index.html#preview](https://lazilywalk.github.io/taiwan-electricity-price-clock/index.html#preview)
 2. 點擊 Safari 瀏覽器底部的 **「分享」按鈕**（有向上箭頭的方塊圖示）。
 3. 在選單中向下捲動，選擇 **「加入主畫面」 (Add to Home Screen)**。
 4. 設定名稱（例如「時間電價鐘」）並點擊右上角的「新增」。
@@ -69,11 +69,11 @@
      * 將圖片來源（System）改為 **網頁截圖 (Web Screenshot)**。
      * 在網址列輸入下方網址（加上 `#widget` 會強制隱藏網頁指針並啟用 Widgy 適配版面）：
        ```text
-       https://lazilywalk.github.io/taiwan-tariff-clock/index.html#widget
+       https://lazilywalk.github.io/taiwan-electricity-price-clock/index.html#widget
        ```
        *💡 **iOS 快取防護提示**：iOS 對網頁小工具的快取極為強烈。若您修改了 JSON 排程或顏色，Widgy 上的畫面可能沒有更新。建議您可以在網址中加上版本號參數（例如 `?v=1#widget`）來強制刷新快取：*
        ```text
-       https://lazilywalk.github.io/taiwan-tariff-clock/index.html?v=1#widget
+       https://lazilywalk.github.io/taiwan-electricity-price-clock/index.html?v=1#widget
        ```
    * **步驟 B（疊加 iOS 原生指針）**：
      * 點擊 `+` 新增圖層 ➡️ 選擇 **針 (Needle)**。
@@ -88,7 +88,7 @@
 
 ## 🛠️ 自訂電價排程與離峰日設定
 
-您可以直接修改本儲存庫中的 **`tariff-schedule.json`**，主程式會自動加載並套用：
+您可以直接修改本儲存庫中的 **`tou-schedule.json`**，主程式會自動加載並套用：
 
 ### 1. 新增離峰日 (offDays)
 離峰日擁有最高判定優先權，該日期會被整天判定為綠色「離峰時間」。
@@ -117,9 +117,13 @@
 
 ## 🤖 開發說明與 AI 聲明
 
-本專案之程式碼、排版與設計主要由 AI (Gemini / Antigravity) 協助生成與優化。  
-本專案是作者為了滿足個人在 iPhone 畫面上查看時間電價的需求而開發的時鐘工具。  
-為了讓桌面小工具 (Widgy) 能順利擷取網頁，因此將專案開源並部署於 GitHub Pages。
+本專案是作者為了滿足個人在 iPhone 畫面上查看時間電價的需求而開發的實用工具。為了讓桌面小工具 (Widgy) 能順利擷取網頁，因此將專案開源並部署於 GitHub Pages。
+
+本專案由作者與 AI 工具 (Gemini / Antigravity) 共同協作完成，具體分工如下：
+* **作者**：負責專案概念發想、電價排程規則定義、iOS 桌面適配性測試與開源整理。
+* **AI 工具**：協助核心算法邏輯、SVG 錶盤繪製、網頁前端架架構（HTML/CSS/JS）的程式碼生成與程式碼優化。
+
+本專案目前已達作者個人之實用需求，維持在穩定運作狀態。
 
 ---
 
